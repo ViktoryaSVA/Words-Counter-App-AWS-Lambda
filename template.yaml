@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  word-counter-app
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  # This is a Lambda function config associated with the source code: put-item.js
+  postCountWordsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: built
+      Handler: handlers/post-count-words.postCountWordsHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description: Function that calculates how many different types of words can be found within the provided text.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+
+
+Outputs:
+  WebEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
